@@ -1,0 +1,40 @@
+import yfinance as yf
+import numpy as np
+import matplotlib
+
+#Measure the risk of the stock
+tickers=['amzn','tsla']
+data= yf.download(tickers,start='2018-01-01',end='2020-12-30')['Adj Close']
+print(data)
+
+#Normalize stock data= to see the percentage change of stock price over the period
+#testing first row of data
+firstrow=data.iloc[0]
+print(firstrow)
+normalizedata=((data/firstrow)*100).plot(figsize=(15,6))
+normalizedata.set_title('Normalize Return of Stocks 2018-2020')
+normalizedata.set_ylabel('Percentage change%')
+#Analysis= Tesla and Amazon stock have a stable price movement in the early 2018
+#After January 2020, Tesla has significant high percentage change on stock price
+
+#Measure log return of each stock overtime period 
+sec_logreturn= np.log(data/data.shift(1))
+print(sec_logreturn)
+
+
+#Choose to analyze the mean 
+mean_secrt=sec_logreturn['AMZN'].mean()
+mean_secrt2=sec_logreturn['TSLA'].mean()
+print('Mean value of AMZN=',mean_secrt)
+print('Mean value of TSLA=',mean_secrt2)
+#Annualize rate of return
+annual_secrt=sec_logreturn['AMZN'].mean()*250
+annual_secrt2=sec_logreturn['TSLA'].mean()*250
+print('Annual rate of AMZN=',annual_secrt)
+print('Annual rate of TSLA=',annual_secrt2)
+
+#Choose to analyze the standard deviaition
+std_secrt=sec_logreturn['AMZN'].std()*250**0.5
+std_secrt2=sec_logreturn['TSLA'].std()*250**0.5
+print('Std value of AMZN=',std_secrt)
+print('Std value of TSLA=',std_secrt2)
